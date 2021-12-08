@@ -189,8 +189,6 @@ echo "compile time!"
 compile-box86 || error "Failed to run compile-box86 function! (line 204)"
 package-box86 || error "Failed to run package-box86 function! (line 205)"
 clean-up || error "Failed to run clean-up function! (line 206)"
-#clear the screen (scrolling up)
-clear -x
 echo $commit > /home/pi/Documents/box86-auto-build/commit.txt
 #write to the log file that build and packaging are complete
 touch box86-2deb-weekly_log.log

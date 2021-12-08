@@ -53,7 +53,7 @@ function get-box64-version() {
 #check if checkinstall is installed
 if ! command -v checkinstall > /dev/null; then
   #this package contains everything that's needed for checkinstall
-  sudo apt update && sudo apt install gettext || error "Failed to apt update && apt install gettext"
+  sudo apt update && sudo apt install gettext -y || error "Failed to apt update && apt install gettext"
   git clone https://github.com/giuliomoro/checkinstall
   cd checkinstall
   sudo make install
@@ -76,7 +76,7 @@ DEBVER="$(echo "$BOX64VER+$(date +"%F" | sed 's/-//g').$BOX64COMMIT")" || error 
 sudo checkinstall -y -D --pkgversion="$DEBVER" --arch="arm64" --provides="box64" --conflicts="qemu-user-static" --pkgname="box64" --install="no" make install || error "Checkinstall failed to create a deb package."
 
 # move deb to destination folder
-echo "Moving deb to ${DDEB}..."
-mv $BUILDDIR/box64*.deb $DDEB || error "Failed to move deb."
-cd $DDEB
+echo "Moving deb to ${DDIR}..."
+mv $BUILDDIR/box64*.deb $DDIR || error "Failed to move deb."
+cd $DDIR
 rm -rf ${DIR}/box64_${NOWDAY} || error "Failed to remove box64_${NOWDAY} folder."
