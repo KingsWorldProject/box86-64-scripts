@@ -1,14 +1,17 @@
 #!/bin/bash
 
-# this is the folder where box64 will be built (don't change in most cases)
-DIR="$HOME"
-
-# this is the folder where box64's deb will be located (change if needed)
-DDIR="$HOME/Downloads"
+# box64-deb.sh: generate a box64 deb file for easy system installation
 
 NOWDAY="$(printf '%(%Y-%m-%d)T\n' -1)"
 
-# box64-deb.sh: generate a box64 deb file for easy system installation
+if ! command -v checkinstall > /dev/null; then
+  #this package contains everything that's needed for checkinstall
+  sudo apt update && sudo apt install gettext || error "Failed to apt update && apt install gettext"
+  git clone https://github.com/giuliomoro/checkinstall
+  cd checkinstall
+  sudo make install
+  cd .. && rm -rf checkinstall
+fi
 
 #error function: prints error in red, touches log and exits
 function error() {
@@ -26,47 +29,31 @@ wget -q --spider http://github.com
 if [ $? -eq 0 ]; then
   echo "Online. Continuing."
 else
-  error "Offline. Go connect to the internet then run the script again. (could not resolve github.com)"
+  error "Offline. Connect to the internet then run the script again. (could not resolve github.com)"
 fi
 
 #clone box64 using git
-cd $DIR || error "Failed to enter $DIR directory!"
-mkdir box64_${NOWDAY} || error "Failed to create box64_${NOWDAY} folder!"
-cd box64_${NOWDAY} || error "Failed to enter box64_${NOWDAY} folder!"
-git clone https://github.com/ptitSeb/box64 . || error "Failed to clone box64 repo."
+cd $HOME || error "Failed to enter $HOME directory!"
+rm -rf box64
+git clone https://github.com/ptitSeb/box64 || error "Failed to clone box64!"
+cd box64 && mkdir build && cd build
 
-#compile box64
-mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DARM_DYNAREC=1 || error "Failed to run cmake."
-make || error "Failed to run make."
-BUILDDIR="$(pwd)"
 
 #this function gets the box64 version and commit when it's needed. (Thanks Itai)
 function get-box64-version() {
 	if [[ $1 == "ver" ]]; then
 		BOX64VER="$(./box64 -v | grep Box64 | cut -c 21-25)"
 	elif [[ $1 == "commit" ]]; then
-		BOX64COMMIT="$(cat /home/pi/Documents/box64-auto-build/commit.txt)"
+		BOX86COMMIT="$(./box86 -v | cut -c27-34)"
 	fi
 }
 
-#check if checkinstall is installed
-if ! command -v checkinstall > /dev/null; then
-  #this package contains everything that's needed for checkinstall
-  sudo apt update && sudo apt install gettext -y || error "Failed to apt update && apt install gettext"
-  git clone https://github.com/giuliomoro/checkinstall
-  cd checkinstall
-  sudo make install
-  cd .. && rm -rf checkinstall
-fi
-
 #create docs package, postinstall and description
-cd $BUILDDIR
 mkdir doc-pak
-cp $DIR/box64/docs/README.md $BUILDDIR/doc-pak || warning "Failed to add readme to docs"
-cp $DIR/box64/docs/CHANGELOG.md $BUILDDIR/doc-pak || warning "Failed to add changelog to docs"
-cp $DIR/box64/docs/USAGE.md $BUILDDIR/doc-pak || warning "Failed to add USAGE to docs"
-cp $DIR/box64/LICENSE $BUILDDIR/doc-pak || warning "Failed to add license to docs"
+cp $DIR/box64/docs/README.md $HOME/box64/build/doc-pak || warning "Failed to add readme to docs"
+cp $DIR/box64/docs/CHANGELOG.md $HOME/box64/build/doc-pak || warning "Failed to add changelog to docs"
+cp $DIR/box64/docs/USAGE.md $HOME/box64/build/doc-pak || warning "Failed to add USAGE to docs"
+cp $DIR/box64/LICENSE $HOME/box64/build/doc-pak || warning "Failed to add license to docs"
 echo "Box64 lets you run x86_64 Linux programs (such as games) on non-x86_64 Linux systems, like ARM (host system needs to be 64bit little-endian)">description-pak || error "Failed to create description-pak."
 echo "#!/bin/bash
 echo 'Restarting systemd-binfmt...'
@@ -76,7 +63,7 @@ DEBVER="$(echo "$BOX64VER+$(date +"%F" | sed 's/-//g').$BOX64COMMIT")" || error 
 sudo checkinstall -y -D --pkgversion="$DEBVER" --arch="arm64" --provides="box64" --conflicts="qemu-user-static" --pkgname="box64" --install="no" make install || error "Checkinstall failed to create a deb package."
 
 # move deb to destination folder
-echo "Moving deb to ${DDIR}..."
-mv $BUILDDIR/box64*.deb $DDIR || error "Failed to move deb."
-cd $DDIR
-rm -rf ${DIR}/box64_${NOWDAY} || error "Failed to remove box64_${NOWDAY} folder."
+echo "Moving deb to ${HOME}..."
+mv $HOME/box64/build/box64*.deb $HOME || error "Failed to move deb."
+cd $HOME
+rm -rf box64 || error "Failed to remove box64_${NOWDAY} folder."
