@@ -50,10 +50,10 @@ function get-box64-version() {
 
 #create docs package, postinstall and description
 mkdir doc-pak
-cp $DIR/box64/docs/README.md $HOME/box64/build/doc-pak || warning "Failed to add readme to docs"
-cp $DIR/box64/docs/CHANGELOG.md $HOME/box64/build/doc-pak || warning "Failed to add changelog to docs"
-cp $DIR/box64/docs/USAGE.md $HOME/box64/build/doc-pak || warning "Failed to add USAGE to docs"
-cp $DIR/box64/LICENSE $HOME/box64/build/doc-pak || warning "Failed to add license to docs"
+cp $HOME/box64/docs/README.md $HOME/box64/build/doc-pak || warning "Failed to add readme to docs"
+cp $HOME/box64/docs/CHANGELOG.md $HOME/box64/build/doc-pak || warning "Failed to add changelog to docs"
+cp $HOME/box64/docs/USAGE.md $HOME/box64/build/doc-pak || warning "Failed to add USAGE to docs"
+cp $HOME/box64/LICENSE $HOME/box64/build/doc-pak || warning "Failed to add license to docs"
 echo "Box64 lets you run x86_64 Linux programs (such as games) on non-x86_64 Linux systems, like ARM (host system needs to be 64bit little-endian)">description-pak || error "Failed to create description-pak."
 echo "#!/bin/bash
 echo 'Restarting systemd-binfmt...'
