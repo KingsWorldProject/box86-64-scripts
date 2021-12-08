@@ -37,14 +37,15 @@ cd $HOME || error "Failed to enter $HOME directory!"
 rm -rf box64
 git clone https://github.com/ptitSeb/box64 || error "Failed to clone box64!"
 cd box64 && mkdir build && cd build
-
+cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DARM_DYNAREC=1 || error "Failed to run cmake."
+make -j4 || error "Failed to run make."
 
 #this function gets the box64 version and commit when it's needed. (Thanks Itai)
 function get-box64-version() {
 	if [[ $1 == "ver" ]]; then
 		BOX64VER="$(./box64 -v | grep Box64 | cut -c 21-25)"
 	elif [[ $1 == "commit" ]]; then
-		BOX86COMMIT="$(./box86 -v | cut -c27-34)"
+		BOX64COMMIT="$(./box64 -v | cut -c27-34)"
 	fi
 }
 
@@ -66,4 +67,4 @@ sudo checkinstall -y -D --pkgversion="$DEBVER" --arch="arm64" --provides="box64"
 echo "Moving deb to ${HOME}..."
 mv $HOME/box64/build/box64*.deb $HOME || error "Failed to move deb."
 cd $HOME
-rm -rf box64 || error "Failed to remove box64_${NOWDAY} folder."
+rm -rf box64 || error "Failed to remove box64 folder."
