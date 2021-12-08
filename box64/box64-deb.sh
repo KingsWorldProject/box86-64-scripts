@@ -6,7 +6,7 @@ NOWDAY="$(printf '%(%Y-%m-%d)T\n' -1)"
 
 if ! command -v checkinstall > /dev/null; then
   #this package contains everything that's needed for checkinstall
-  sudo apt update && sudo apt install gettext || error "Failed to apt update && apt install gettext"
+  sudo apt update && sudo apt install gettext -y || error "Failed to apt update && apt install gettext"
   git clone https://github.com/giuliomoro/checkinstall
   cd checkinstall
   sudo make install
