@@ -40,12 +40,12 @@ cd box86 && mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DARM_DYNAREC=1 || error "Failed to run cmake."
 make -j4 || error "Failed to run make."
 
-#this function gets the box86 version and commit when it's needed. (Thanks Itai)
+#this function gets the box86 version and commit when it's needed. (Thanks @Itai-Nelken)
 function get-box86-version() {
 	if [[ $1 == "ver" ]]; then
-		BOX86VER="$(./box86 -v | grep box86 | cut -c 21-25)"
+		BOX86VER="$(./box86 -v | cut -c21-25)"
 	elif [[ $1 == "commit" ]]; then
-		BOX86COMMIT="$(./box86 -v | tail -n +2 | cut -c27-34)"
+		BOX86COMMIT="$(./box86 -v | cut -c27-34)"
 	fi
 }
 
