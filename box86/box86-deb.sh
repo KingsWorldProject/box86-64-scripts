@@ -60,7 +60,7 @@ echo "#!/bin/bash
 echo 'Restarting systemd-binfmt...'
 systemctl restart systemd-binfmt || true">postinstall-pak || error "Failed to create postinstall-pak!"
 get-box86-version ver && get-box86-version commit || error "Failed to get box86 version or commit!"
-DEBVER="$(echo "$BOX8686VER+$(date +"%F" | sed 's/-//g').$BOX86COMMIT")" || error "Failed to set debver variable."
+DEBVER="$(echo "$BOX86VER+$(date +"%F" | sed 's/-//g').$BOX86COMMIT")" || error "Failed to set debver variable."
 sudo checkinstall -y -D --pkgversion="$DEBVER" --arch="armhf" --provides="box86" --conflicts="qemu-user-static" --pkgname="box86" --install="no" make install || error "Checkinstall failed to create a deb package."
 
 # move deb to destination folder
