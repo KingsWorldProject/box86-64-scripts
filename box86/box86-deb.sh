@@ -63,11 +63,10 @@ get-box86-version ver && get-box86-version commit || error "Failed to get box86 
 DEBVER="$(echo "$BOX86VER+$(date +"%F" | sed 's/-//g').$BOX86COMMIT")" || error "Failed to set debver variable."
 sudo checkinstall -y -D --pkgversion="$DEBVER" --arch="armhf" --provides="box86" --conflicts="qemu-user-static" --pkgname="box86" --install="no" make install || error "Checkinstall failed to create a deb package."
 
-mkdir debrepackdir && cd debrepackdir
-mv $HOME/box86/build/box86*.deb ./sample.deb
-dpkg-deb -R ../sample.deb ../box86-deb
-rm -f ../sample.deb
-rm ../DEBIAN/control
+mv box86*.deb sample.deb
+dpkg-deb -R sample.deb box86-deb
+rm -f sample.deb
+rm box86-deb/DEBIAN/control
 echo "Package: box86
 Priority: extra
 Section: utils
@@ -77,12 +76,11 @@ Version: ${DEBVER}
 Provides: box86
 Conflicts: qemu-user-static
 Description: Box86 lets you run x86 Linux programs (such as games) on non-x86 Linux systems, like ARM (host system needs to be 32bit little-endian)
- box86 lets you run x86 Linux programs (such as games) on non-x86 Linux systems, like ARM (host system needs to be 32bit little-endian)" > ../DEBIAN/control
-cd ../..
-dpkg-deb -b ./box86-deb box86_"$DEBVER"_arm64.deb
+ box86 lets you run x86 Linux programs (such as games) on non-x86 Linux systems, like ARM (host system needs to be 32bit little-endian)" > box86-deb/DEBIAN/control
+dpkg-deb -b box86-deb/ box86_"$DEBVER"_arm64.deb
 
 # move deb to destination folder
 echo "Moving deb to ${HOME}..."
-mv $HOME/box86/build/debrepackdir/box86*.deb $HOME || error "Failed to move deb."
+mv $HOME/box86/build/box86*.deb $HOME || error "Failed to move deb."
 cd $HOME
 rm -rf box86 || error "Failed to remove box86 folder."
