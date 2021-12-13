@@ -77,7 +77,7 @@ Provides: box86
 Conflicts: qemu-user-static
 Description: Box86 lets you run x86 Linux programs (such as games) on non-x86 Linux systems, like ARM (host system needs to be 32bit little-endian)
  box86 lets you run x86 Linux programs (such as games) on non-x86 Linux systems, like ARM (host system needs to be 32bit little-endian)" > box86-deb/DEBIAN/control
-dpkg-deb -b box86-deb/ box86_"$DEBVER"_arm64.deb
+dpkg-deb -b box86-deb/ box86_"$DEBVER"_armhf.deb
 
 # move deb to destination folder
 echo "Moving deb to ${HOME}..."
