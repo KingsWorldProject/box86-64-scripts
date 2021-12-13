@@ -63,6 +63,21 @@ get-box64-version ver && get-box64-version commit || error "Failed to get box64 
 DEBVER="$(echo "$BOX64VER+$(date +"%F" | sed 's/-//g').$BOX64COMMIT")" || error "Failed to set debver variable."
 sudo checkinstall -y -D --pkgversion="$DEBVER" --arch="arm64" --provides="box64" --conflicts="qemu-user-static" --pkgname="box64" --install="no" make install || error "Checkinstall failed to create a deb package."
 
+mv box64*.deb sample.deb
+dpkg-deb -R sample.deb box64-deb
+rm -f sample.deb
+rm box64-deb/DEBIAN/control
+echo "Package: box64
+Priority: extra
+Section: utils
+Maintainer: Ryan Fortner <ryankfortner@gmail.com>
+Architecture: armhf
+Version: ${DEBVER}
+Provides: box64
+Conflicts: qemu-user-static
+Description: Box64 lets you run x86_64 Linux programs (such as games) on non-x86_64 Linux systems, like ARM (host system needs to be 64bit little-endian)" > box64-deb/DEBIAN/control
+dpkg-deb -b box64-deb/ box64_"$DEBVER"_arm64.deb
+
 # move deb to destination folder
 echo "Moving deb to ${HOME}..."
 mv $HOME/box64/build/box64*.deb $HOME || error "Failed to move deb."
