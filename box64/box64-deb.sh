@@ -76,7 +76,7 @@ Version: ${DEBVER}
 Provides: box64
 Conflicts: qemu-user-static
 Description: Box64 lets you run x86_64 Linux programs (such as games) on non-x86_64 Linux systems, like ARM (host system needs to be 64bit little-endian)" > box64-deb/DEBIAN/control
-dpkg-deb -b box64-deb/ box64_"$DEBVER"_arm64.deb
+dpkg-deb -b box64-deb/ box64_${DEBVER}_arm64.deb
 
 # move deb to destination folder
 echo "Moving deb to ${HOME}..."
