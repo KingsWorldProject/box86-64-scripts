@@ -79,7 +79,7 @@ Description: Box64 lets you run x86_64 Linux programs (such as games) on non-x86
 dpkg-deb -b box64-deb/ box64_${DEBVER}_arm64.deb
 
 # move deb to destination folder
-echo "Moving deb to ${WORKSPACE}..."
-mv $WORKSPACE/box64/build/box64*.deb $WORKSPACE || error "Failed to move deb."
-cd $WORKSPACE
-rm -rf box64 || error "Failed to remove box64 folder."
+#echo "Moving deb to ${WORKSPACE}..."
+#mv $WORKSPACE/box64/build/box64*.deb $WORKSPACE || error "Failed to move deb."
+#cd $WORKSPACE
+#rm -rf box64 || error "Failed to remove box64 folder."
