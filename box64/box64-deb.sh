@@ -5,6 +5,8 @@
 NOWDAY="$(printf '%(%Y-%m-%d)T\n' -1)"
 
 if ! command -v checkinstall > /dev/null; then
+  echo "checkinstall not found (needed for initial deb creation)"
+  echo "installing it now..."
   #this package contains everything that's needed for checkinstall
   sudo apt update && sudo apt install gettext -y || error "Failed to apt update && apt install gettext"
   git clone https://github.com/giuliomoro/checkinstall
