@@ -33,7 +33,7 @@ else
 fi
 
 #clone box64 using git
-cd $HOME || error "Failed to enter $HOME directory!"
+cd $WORKSPACE || error "Failed to enter $WORKSPACE directory!"
 rm -rf box64
 git clone https://github.com/ptitSeb/box64 || error "Failed to clone box64!"
 cd box64 && mkdir build && cd build
@@ -51,10 +51,10 @@ function get-box64-version() {
 
 #create docs package, postinstall and description
 mkdir doc-pak
-cp $HOME/box64/docs/README.md $HOME/box64/build/doc-pak || warning "Failed to add readme to docs"
-cp $HOME/box64/docs/CHANGELOG.md $HOME/box64/build/doc-pak || warning "Failed to add changelog to docs"
-cp $HOME/box64/docs/USAGE.md $HOME/box64/build/doc-pak || warning "Failed to add USAGE to docs"
-cp $HOME/box64/LICENSE $HOME/box64/build/doc-pak || warning "Failed to add license to docs"
+cp $WORKSPACE/box64/docs/README.md $WORKSPACE/box64/build/doc-pak || warning "Failed to add readme to docs"
+cp $WORKSPACE/box64/docs/CHANGELOG.md $WORKSPACE/box64/build/doc-pak || warning "Failed to add changelog to docs"
+cp $WORKSPACE/box64/docs/USAGE.md $WORKSPACE/box64/build/doc-pak || warning "Failed to add USAGE to docs"
+cp $WORKSPACE/box64/LICENSE $WORKSPACE/box64/build/doc-pak || warning "Failed to add license to docs"
 echo "Box64 lets you run x86_64 Linux programs (such as games) on non-x86_64 Linux systems, like ARM (host system needs to be 64bit little-endian)">description-pak || error "Failed to create description-pak."
 echo "#!/bin/bash
 echo 'Restarting systemd-binfmt...'
@@ -79,7 +79,7 @@ Description: Box64 lets you run x86_64 Linux programs (such as games) on non-x86
 dpkg-deb -b box64-deb/ box64_${DEBVER}_arm64.deb
 
 # move deb to destination folder
-echo "Moving deb to ${HOME}..."
-mv $HOME/box64/build/box64*.deb $HOME || error "Failed to move deb."
-cd $HOME
+echo "Moving deb to ${WORKSPACE}..."
+mv $WORKSPACE/box64/build/box64*.deb $WORKSPACE || error "Failed to move deb."
+cd $WORKSPACE
 rm -rf box64 || error "Failed to remove box64 folder."
